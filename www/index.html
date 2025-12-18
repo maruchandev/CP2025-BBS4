@@ -57,12 +57,15 @@ function updateCharacterCount(inputId, counterId, maxLength) {
 
     input.on('input', () => {
         const length = input.val().length;
-        counter.text(`${length}/${maxLength}`);
+        // counter.text(`${length}/${maxLength}`);
+        var text_limit=maxLength-length;
 
         if (length > maxLength) {
             counter.addClass('error');
+            counter.text(`${text_limit*-1}文字オーバー`);
         } else {
             counter.removeClass('error');
+            counter.text(`あと${text_limit}文字`);
         }
     });
 }
@@ -73,8 +76,8 @@ function validateContent(content) {
         showMessage('投稿内容を入力してください', 'error');
         return false;
     }
-    if (content.length > 1000) {
-        showMessage('投稿内容は1000文字以内で入力してください', 'error');
+    if (content.length > 100) {
+        showMessage('投稿内容は100文字以内で入力してください', 'error');
         return false;
     }
     return true;
@@ -121,7 +124,7 @@ function createPost(author, content) {
     .then(() => {
         showMessage('投稿が完了しました！');
         $('#contentInput').val('');
-        updateCharacterCount('contentInput', 'contentCount', 1000);
+        updateCharacterCount('contentInput', 'contentCount', 100);
     })
     .catch((error) => {
         showMessage('投稿に失敗しました：' + error.message, 'error');
@@ -337,7 +340,7 @@ function startEdit(postId) {
     const content = post.find('.post-content').text();
 
     $('#editContent').val(content);
-    updateCharacterCount('editContent', 'editContentCount', 1000);
+    updateCharacterCount('editContent', 'editContentCount', 100);
     showModal('editModal');
 }
 
@@ -476,7 +479,7 @@ $(function() {
      });
 
     // 文字数カウンターの初期化
-    updateCharacterCount('contentInput', 'contentCount', 1000);
+    updateCharacterCount('contentInput', 'contentCount', 100);
 
     // 投稿処理
     $('#postButton').on('click', () => {
@@ -554,7 +557,7 @@ window.addEventListener('unload', () => {
                 <label for="contentInput">投稿内容</label>
                 <textarea id="contentInput" class="form-control"
                           placeholder="投稿内容を入力してください"></textarea>
-                <small class="character-count" id="contentCount">0/1000</small>
+                <small class="character-count" id="contentCount"></small>
             </div>
             <div class="button-group">
                 <button id="postButton" class="btn-primary">投稿する</button>
@@ -589,7 +592,7 @@ window.addEventListener('unload', () => {
             <div class="modal-body">
                 <div class="form-group">
                     <textarea id="editContent" class="form-control"></textarea>
-                    <small class="character-count" id="editContentCount">0/1000</small>
+                    <small class="character-count" id="editContentCount"></small>
                 </div>
             </div>
             <div class="modal-footer">
