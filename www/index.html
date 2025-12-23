@@ -507,17 +507,41 @@ $(function() {
         register(email, password,display_name);
     });
 
-    $('#create_account_modal').on('click', () => {
-        // 入力欄をクリアしてから開くのが親切
-        $('#regNameInput').val('');
-        $('#regEmailInput').val('');
-        $('#regPasswordInput').val('');
-        showModal('registerModal');
+    $('#edit_username').on('click', function() {
+        if (currentUser) {
+            $('#new_username_input').val(currentUser.displayName);
+            $(this).hide();
+            $('#username_edit_area').fadeIn();
+        }
     });
-    $('#login_account_modal').on('click', () => {
-        $('#loginEmailInput').val('');
-        $('#loginPasswordInput').val('');
-        showModal('loginModal');
+    $('#cancel_username_btn').on('click', function() {
+        $('#username_edit_area').hide();
+        $('#edit_username').show();
+    });
+
+
+    $('#update_username_btn').on('click', function() {
+        const newName = $('#new_username_input').val();
+        if (!newName || !newName.trim()) {
+            showMessage('名前を入力してください', 'error');
+            return;
+        }
+
+        const btn = $(this);
+        btn.prop('disabled', true);
+        currentUser.updateProfile({
+            displayName: newName
+        }).then(function() {
+            showMessage('ユーザー名を変更しました');
+            $('#userEmail').text(newName); 
+
+            $('#username_edit_area').hide();
+            $('#edit_username').show();
+        }).catch(function(error) {
+            showMessage('名前の更新に失敗: ' + error.message, 'error');
+        }).finally(function() {
+            btn.prop('disabled', false);
+        });
     });
 
 
@@ -567,7 +591,12 @@ window.addEventListener('unload', () => {
 
         <!-- ログイン情報（ログイン時表示） -->
         <div class="user-info logged-in">
-            <span>ログイン中：<span id="userEmail"></span></span>
+            <span>ログイン中：<span id="userEmail"></span><button id="edit_username" class="btn_small">編集</button></span>
+            <span id="username_edit_area" style="display: none; margin-left: 10px;">
+        <input type="text" id="new_username_input" placeholder="新しい名前" style="width: 150px;">
+        <button id="update_username_btn" class="btn_small">更新</button>
+        <button id="cancel_username_btn" class="btn_small" style="background-color: #999;">キャンセル</button>
+    </span>
             <button id="logoutButton" class="btn-secondary">ログアウト</button>
         </div>
 
