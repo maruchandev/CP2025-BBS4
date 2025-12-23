@@ -65,7 +65,7 @@ label {
 }
 
 .form-control {
-    width: 100%;
+    width: 90%;
     padding: 8px 12px;
     font-size: 16px;
     border: 1px solid #ced4da;
@@ -105,9 +105,11 @@ textarea.form-control {
 .btn-primary {
     background-color: #007bff;
     color: white;
+
 }
 
 .btn-primary, .btn-secondary, .btn-danger {
+    margin: 5px;
     border: none;
     padding: 8px 16px;
     border-radius: 4px;

@@ -507,6 +507,21 @@ $(function() {
         register(email, password,display_name);
     });
 
+    $('#create_account_modal').on('click', () => {
+        // 入力欄をクリアしてから開くのが親切
+        $('#regNameInput').val('');
+        $('#regEmailInput').val('');
+        $('#regPasswordInput').val('');
+        showModal('registerModal');
+    });
+    $('#login_account_modal').on('click', () => {
+        $('#loginEmailInput').val('');
+        $('#loginPasswordInput').val('');
+        showModal('loginModal');
+    });
+
+
+
     $('#logoutButton').on('click', logout);
 
     // 投稿一覧表示順序選択
@@ -543,7 +558,6 @@ window.addEventListener('unload', () => {
                 <label for="loginPassword">パスワード</label>
                 <input type="password" id="loginPassword"
                        class="form-control" placeholder="6文字以上">
-                <small class="help-text">※新規登録時は6文字以上</small>
             </div>
             <div class="button-group">
                 <button id="loginButton" class="btn-primary">ログイン</button>
