@@ -114,7 +114,7 @@ function createPost(author, content) {
 
     // author はログインしているユーザのメールアドレスに変更、userId を追加
     const postData = {
-        author: currentUser.email,
+        author: currentUser.displayName,
         content: content,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         userId: currentUser.uid
@@ -410,13 +410,16 @@ function login(email, password) {
 }
 
 // 新規登録処理
-function register(email, password) {
+function register(email, password,display_name) {
     if (!validateAuthInput(email, password, true)) return;
 
     const button = $('#registerButton');
     button.prop('disabled', true);
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((result) => {
+        return result.user.updateProfile({displayName: display_name});
+    })
     .then(() => {
         showMessage('アカウントを作成しました');
         clearAuthForm();
@@ -452,7 +455,7 @@ function updateUI(user) {
     if (user) {
         $('.logged-in').show();
         $('.logged-out').hide();
-        $('#userEmail').text(user.email);
+        $('#userEmail').text(user.displayName);
     } else {
         $('.logged-in').hide();
         $('.logged-out').show();
@@ -476,6 +479,8 @@ $(function() {
         currentUser = user;
         updateUI(user);
         loadPosts();
+        var uid = user.uid;
+        console.log(uid);
      });
 
     // 文字数カウンターの初期化
@@ -498,7 +503,8 @@ $(function() {
     $('#registerButton').on('click', () => {
         const email = $('#loginEmail').val();
         const password = $('#loginPassword').val();
-        register(email, password);
+        const display_name="ななしさん";
+        register(email, password,display_name);
     });
 
     $('#logoutButton').on('click', logout);
